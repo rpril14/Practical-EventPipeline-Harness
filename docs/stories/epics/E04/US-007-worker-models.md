@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -48,3 +48,5 @@ option classes for Kafka, Elasticsearch, and ClickHouse.
 none
 
 ## Evidence
+
+- `CdcEvent_test` → 3 passed (c/d/u op deserialization)

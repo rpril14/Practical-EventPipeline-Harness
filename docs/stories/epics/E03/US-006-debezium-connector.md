@@ -49,3 +49,6 @@ events to the Kafka topic `ecommerce.orders_db.orders`.
 none
 
 ## Evidence
+
+- `CdcEvent_test` → 3 passed (unit proof for envelope deserialization)
+- Integration proof pending: requires `docker compose up -d`
