@@ -3,13 +3,13 @@
 Stories are work packets. They turn product intent into bounded implementation
 and validation work.
 
-No story packets are active yet.
+See `backlog.md` for the full list of stories across 4 epics (E01–E04).
 
 ## Normal Story
 
 Use `docs/templates/story.md` for normal feature work.
 
-Suggested path:
+Path convention:
 
 ```text
 docs/stories/epics/E01-domain-name/US-001-short-story-title.md
@@ -20,7 +20,7 @@ docs/stories/epics/E01-domain-name/US-001-short-story-title.md
 Use `docs/templates/high-risk-story/` when the feature intake classifies work as
 high-risk.
 
-Suggested path:
+Path convention:
 
 ```text
 docs/stories/epics/E02-risky-domain/US-012-risky-story-title/
@@ -34,10 +34,10 @@ docs/stories/epics/E02-risky-domain/US-012-risky-story-title/
 
 ```text
 planned -> in_progress -> implemented
-                  |
-                  v
-               changed
-                  |
-                  v
-               retired
+                |
+                v
+             changed
+                |
+                v
+             retired
 ```

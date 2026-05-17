@@ -1,47 +1,44 @@
 # Scripts
 
-This directory is reserved for harness automation.
+## Docker Compose
 
-## Installer
+`docker-compose.yml` starts the full infrastructure for local development:
 
-The upstream installer applies the Harness v0 operating files and folder
-structure to a target project directory. It defaults to the current directory,
-accepts a target path, and asks interactive users whether to `1. Merge`,
-`2. Override`, or `3. Stop` when the target already contains `AGENTS.md`,
-`docs/`, or `scripts/`.
-Non-interactive installs stop on those protected paths unless `--merge` or
-`--override` is provided.
-
-```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
-```
+| Service | Image | Port | Purpose |
+|---|---|---|---|
+| MySQL | mysql:8.0 | 3306 | Transactional store (source of truth) |
+| Kafka | confluentinc/cp-kafka:7.9.0 | 9092 | Event streaming |
+| Debezium | debezium/connect:3.0.0.Final | 8083 | CDC connector (MySQL binlog → Kafka) |
+| Elasticsearch | elasticsearch:8.17.0 | 9200 | Search index |
+| ClickHouse | clickhouse/clickhouse-server | 8123 | Analytics store |
+| Adminer | adminer | 8080 | MySQL admin UI |
+| Kafka-UI | provectuslabs/kafka-ui | 8081 | Kafka topic browser |
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
+# Start all services
+cd scripts && docker compose up -d
+
+# Stop all services
+docker compose down
 ```
 
-The installer must stay limited to harness files. Do not use it to scaffold
-application source folders, package scripts, CI, tests, platform shells, or fake
-validation commands. The installer script is not part of the installed project
-payload.
+**Note:** add `127.0.0.1 kafka` to your hosts file once so the .NET Worker can
+reach Kafka by hostname from the host machine.
 
-## Future Command Contract
+## Commands
 
-Expected future checks:
+```bash
+# Apply database migration
+dotnet ef database update \
+  --project src/EventPipeline.Data \
+  --startup-project src/EventPipeline.Api
 
-```text
-validate:quick
-  format, lint, typecheck, unit tests, architecture check
+# Run all tests
+dotnet test
 
-test:integration
-  backend contract and integration checks
+# Start API
+dotnet run --project src/EventPipeline.Api
 
-test:e2e
-  user-visible end-to-end flows
-
-test:platform
-  platform shell smoke checks, if the project has a native shell
-
-test:release
-  full suite, log checks, and performance smoke
+# Start Worker
+dotnet run --project src/EventPipeline.Worker
 ```

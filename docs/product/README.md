@@ -1,14 +1,10 @@
 # Product Docs
 
-This directory is intentionally generic and mostly empty in Harness v0.
+Product contracts for the EventPipeline project, derived from the original spec.
 
-When a user provides a project spec, derive smaller product contract files here
-instead of keeping one large spec as the living plan. Name files by the product
-domains that actually exist in that spec, for example `overview.md`,
-`billing.md`, `workflows.md`, `permissions.md`, or `api-conventions.md`.
-
-Do not create domain files before the spec just to fill the folder. Empty
-structure is healthier than fake product truth.
+- `overview.md`: system purpose, data flow, and tech stack.
+- `orders.md`: order entity contract, status enum, and API contract.
+- `pipeline.md`: CDC event shape, worker behavior, retry policy, and DLQ.
 
 ## Update Rule
 
