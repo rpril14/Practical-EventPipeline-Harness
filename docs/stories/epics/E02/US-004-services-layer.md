@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -51,3 +51,5 @@ totalAmount computation), update order status, and retrieve an order with its it
 none
 
 ## Evidence
+
+- `OrderService_test` → 8 passed
