@@ -1,143 +1,168 @@
-# harness-experimental
+# EventPipeline — Practical Harness Demo
 
-Harness v0 for agent-driven software development.
+An event-driven e-commerce order processing system, built end-to-end using the
+**Harness Engineering** methodology: every feature started as a product contract,
+moved through a story packet, and was proven before being marked done.
 
-This is not an app template. It is a repository-level operating harness for
-turning human intent or a product spec into agent-ready work: product
-contracts, story packets, validation expectations, architecture decisions, and
-eventually implementation.
+This repository is a working demonstration that AI-assisted development can be
+reliable and inspectable — not just fast.
 
-The app is what users touch. The harness is what agents touch.
+## What This System Does
 
-## Why This Exists
+A REST API accepts commands to create and update orders. MySQL stores transactional
+state. Debezium reads the MySQL binlog and publishes CDC events to Kafka. A
+background worker consumes those events and fans out to Elasticsearch (search index)
+and ClickHouse (analytics store).
 
-Coding agents are becoming useful enough to participate in real software work,
-but the model alone is not the whole system. A repository also needs clear
-instructions, shared product truth, validation loops, internal tools, and
-decision records so an agent can understand what matters before it changes
-code.
-
-Harness Engineering is the practice of designing that operating environment.
-The goal is not simply to make AI write code faster. The goal is to make
-AI-assisted software development more reliable, inspectable, and easier for
-humans to steer.
-
-OpenAI describes this shift as an agent-first world where humans steer and
-agents execute:
-
-https://openai.com/index/harness-engineering/
-
-## Current State
-
-This repository is in Harness v0.
-
-There is no application implementation and no baked-in product specification
-yet. The current work is the reusable project harness: the file structure,
-agent operating model, feature intake process, story templates, and validation
-expectations that help humans and agents turn a future user-provided spec into
-implementation work.
-
-## What Counts As A Harness
-
-A repository starts to have a harness when it helps an agent answer practical
-engineering questions without relying only on chat history:
-
-- What should I read first?
-- What type of work is this?
-- Which product contract does it affect?
-- How risky is the change?
-- What proof will show the work is done?
-- What decision or lesson should future agents inherit?
-
-In this repo, those answers live in `AGENTS.md`, `docs/HARNESS.md`,
-`docs/FEATURE_INTAKE.md`, `docs/ARCHITECTURE.md`, `docs/TEST_MATRIX.md`,
-`docs/stories/`, `docs/decisions/`, and `docs/templates/`.
-
-## Try The Flow
-
-The fastest way to understand the harness is to inspect a tiny example:
-
-- `docs/demo/README.md`: shows how a simple product idea becomes product docs,
-  stories, validation expectations, and decisions before implementation starts.
-
-## Product Sources
-
-No product contract is currently defined.
-
-When a user provides a project specification, add or reference it as the input
-spec for the first buildout, then derive smaller living artifacts from it:
-
-- `docs/product/`: current product contract files, created from the spec.
-- `docs/stories/`: story packets and backlog created from selected work.
-- `docs/TEST_MATRIX.md`: behavior-to-proof control panel.
-- `docs/decisions/`: durable decisions and tradeoffs.
-
-Do not keep a project-specific spec or product breakdown in this harness until
-a real project supplies one.
-
-## Harness Sources
-
-- `AGENTS.md`: agent entrypoint and operating rules.
-- `docs/HARNESS.md`: human-agent collaboration model.
-- `docs/FEATURE_INTAKE.md`: tiny, normal, and high-risk work classification.
-- `docs/ARCHITECTURE.md`: generic architecture discovery and boundary rules.
-- `docs/HARNESS_BACKLOG.md`: proposed harness improvements.
-- `docs/templates/`: reusable spec-intake, story, decision, and validation
-  templates.
-
-## Repository Structure
-
-```text
-project/
-  AGENTS.md
-  README.md
-  docs/
-    HARNESS.md
-    FEATURE_INTAKE.md
-    ARCHITECTURE.md
-    TEST_MATRIX.md
-    HARNESS_BACKLOG.md
-    product/
-    stories/
-    decisions/
-    demo/
-    templates/
-  scripts/
-    README.md
+```
+Client → API → MySQL → Debezium → Kafka → Worker → Elasticsearch
+                                                  └──────────────→ ClickHouse
 ```
 
-## Working Rule
+## Tech Stack
 
-Implementation prompts do not go straight to code. They first pass through
-feature intake, become story-sized work when needed, and then carry both
-product validation and harness maintenance expectations.
+| Layer | Technology |
+|---|---|
+| Language | C# / .NET 10 |
+| API | ASP.NET Core 10 |
+| ORM | Entity Framework Core 9 + Pomelo MySQL |
+| Database | MySQL 8.0 |
+| CDC | Debezium 3.0 |
+| Messaging | Kafka (Confluent.Kafka 2.6) |
+| Search | Elasticsearch 8 (NEST 7.17) |
+| Analytics | ClickHouse (ClickHouse.Client 7.4) |
+| Tests | xUnit 2.9 + Moq 4.20 |
+| Dev infra | Docker Compose |
 
-## Install Harness Into A Project
+## How It Was Built — The Harness Flow
 
-From a target project directory, run:
+This project does not start from code. Every change passed through a structured
+intake process before a line was written:
+
+```
+Spec provided by human
+  → Intake classification (new spec, high-risk, 4+ risk flags)
+  → Product contracts written (docs/product/)
+  → Story packets created (docs/stories/epics/)
+  → Test matrix populated (docs/TEST_MATRIX.md)
+  → Architecture decisions recorded (docs/decisions/)
+  → Implementation: failing test → implement → pass → commit
+  → Story status updated to implemented
+  → Test matrix evidence filled in
+```
+
+Each of the 10 stories in this project followed that loop. The harness artifacts
+are not documentation added after the fact — they drove the work.
+
+## Project Structure
+
+```
+EventPipeline-harness/
+├── AGENTS.md                        ← agent entrypoint: read order, task loop, done definition
+├── src/
+│   ├── EventPipeline.Api            ← ASP.NET Core: POST/PUT/GET /orders
+│   ├── EventPipeline.Data           ← EF Core entities, DbContext, migrations
+│   ├── EventPipeline.Services       ← OrderService business logic
+│   └── EventPipeline.Worker         ← Kafka consumer, handlers, RetryPolicy, DLQ
+├── test/
+│   └── EventPipeline.Tests          ← 31 tests: unit + integration coverage
+├── scripts/
+│   └── docker-compose.yml           ← MySQL, Kafka, Debezium, Elasticsearch, ClickHouse
+└── docs/
+    ├── product/                     ← living product contracts (orders, pipeline)
+    ├── stories/
+    │   ├── backlog.md               ← 10 stories across 4 epics
+    │   ├── spec-intake-2026-05-17.md
+    │   └── epics/E01…E04/           ← individual story packets
+    ├── decisions/                   ← 7 architecture decisions with context and tradeoffs
+    ├── TEST_MATRIX.md               ← behavior-to-proof control panel
+    └── templates/                   ← reusable story, decision, validation templates
+```
+
+## Running Locally
+
+**Prerequisites:** Docker Desktop, .NET 10 SDK, `127.0.0.1 kafka` in hosts file.
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
+# Start infrastructure
+cd scripts && docker compose up -d
+
+# Apply database migration
+dotnet ef database update \
+  --project src/EventPipeline.Data \
+  --startup-project src/EventPipeline.Api
+
+# Register Debezium connector
+curl -X POST http://localhost:8083/connectors \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "orders-connector",
+    "config": {
+      "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+      "database.hostname": "mysql", "database.port": "3306",
+      "database.user": "root", "database.password": "root",
+      "database.server.id": "1", "topic.prefix": "ecommerce",
+      "database.include.list": "orders_db",
+      "table.include.list": "orders_db.Orders",
+      "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+      "schema.history.internal.kafka.topic": "schema-changes.orders",
+      "decimal.handling.mode": "double"
+    }
+  }'
+
+# Start API
+dotnet run --project src/EventPipeline.Api --urls http://localhost:5000
+
+# Start Worker (separate terminal)
+dotnet run --project src/EventPipeline.Worker
+
+# Create an order
+curl -X POST http://localhost:5000/orders \
+  -H "Content-Type: application/json" \
+  -d '{"customerId":1,"items":[{"productId":10,"quantity":2,"price":15.00}]}'
 ```
 
-If the target already has `AGENTS.md`, `docs/`, or `scripts/`, choose one:
+After creating an order, the CDC event flows through Debezium → Kafka → Worker and
+the order appears in both Elasticsearch (`http://localhost:9200/orders/_search`) and
+ClickHouse (`SELECT * FROM order_events`).
+
+## Running Tests
 
 ```bash
-# Keep existing files and add only missing Harness files
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
-
-# Back up and replace AGENTS.md, docs/, and scripts/
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --override --yes
+dotnet test
+# Expected: 31 passed, 0 failed
 ```
 
-Or install into a specific path:
+## What the Harness Provides
 
-```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --directory /path/to/project --yes
-```
+**`AGENTS.md`** tells any AI agent what to read first, how to classify work, when to
+ask for confirmation, and what "done" means. An agent entering this repo cold can
+orient itself without relying on chat history.
 
-If the target already contains `AGENTS.md`, `docs/`, or `scripts/`, interactive
-installs ask whether to `1. Merge`, `2. Override`, or `3. Stop`. Non-interactive
-installs using `--yes` stop before writing unless `--merge` or `--override` is
-provided. Use `--dry-run` to preview changes. The installer itself and this
-repository's installer story are not copied into the target project.
+**`docs/product/`** contains the living product contracts derived from the original
+spec. These are updated as behavior changes — not kept as a static spec document.
+
+**`docs/stories/epics/`** holds one story packet per feature. Each packet records the
+product contract, acceptance criteria, design notes, validation shape, and evidence
+gathered after implementation. The story is not closed until proof exists.
+
+**`docs/TEST_MATRIX.md`** maps every behavior to its proof. A row is marked
+`implemented` only when tests or manual evidence have been recorded.
+
+**`docs/decisions/`** captures seven architecture decisions — why the status enum is
+closed, why navigation properties are absent, why ClickHouse is append-only, why the
+consumer always commits after DLQ routing. Future developers and agents inherit the
+reasoning, not just the outcome.
+
+## What Harness Engineering Is
+
+Coding agents are capable enough to participate in real software work. But the model
+alone is not the whole system. A repository also needs clear instructions, shared
+product truth, validation loops, and decision records so an agent can understand what
+matters before it changes code.
+
+Harness Engineering is the practice of designing that operating environment. The goal
+is not to make AI write code faster. The goal is to make AI-assisted development more
+reliable, inspectable, and easier for humans to steer.
+
+This project is a concrete example of that practice applied to a non-trivial system.
