@@ -7,7 +7,7 @@
 | E01 | Infrastructure & Data Layer — solution, Docker Compose, EF Core | sliced |
 | E02 | API Layer — OrdersController, OrderService, DI | sliced |
 | E03 | CDC Pipeline — Debezium connector, Kafka topic | sliced |
-| E04 | Worker Layer — consumer, handlers, RetryPolicy, DLQ | sliced |
+| E04 | Worker Layer — consumer, handlers, DLQ | sliced |
 
 ## In Progress
 
@@ -30,7 +30,7 @@ none
 | [US-007](epics/E04/US-007-worker-models.md) | E04 | normal | Worker models — CdcEvent, OrderSnapshot, options |
 | [US-008](epics/E04/US-008-infra-clients.md) | E04 | high-risk | Infrastructure clients — Elasticsearch, ClickHouse |
 | [US-009](epics/E04/US-009-handlers.md) | E04 | high-risk | Event handlers — search and analytics |
-| [US-010](epics/E04/US-010-consumer.md) | E04 | high-risk | Kafka consumer — base, OrderCdcConsumer, RetryPolicy, DLQ |
+| [US-010](epics/E04/US-010-consumer.md) | E04 | high-risk | Kafka consumer — base, OrderCdcConsumer, DLQ |
 
 ## Deferred
 

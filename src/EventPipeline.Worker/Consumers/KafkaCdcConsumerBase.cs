@@ -14,7 +14,6 @@ namespace EventPipeline.Worker.Consumers;
 public abstract class KafkaCdcConsumerBase<T>(
     IConsumer<string, string> consumer,
     IProducer<string, string> dlqProducer,
-    RetryPolicy retryPolicy,
     IOptions<KafkaOptions> options,
     ILogger logger) : IHostedService
 {
@@ -38,7 +37,7 @@ public abstract class KafkaCdcConsumerBase<T>(
         try
         {
             var evt = DeserializeEvent(result.Message.Value);
-            await retryPolicy.ExecuteAsync(() => HandleAsync(evt));
+            await HandleAsync(evt);
             consumer.Commit(result);
         }
         catch (Exception ex)

@@ -74,12 +74,5 @@ The Debezium operation code in a CDC event:
 ### DLQ (Dead Letter Queue)
 
 The Kafka topic (`ecommerce.orders_db.Orders.dlq`) where the Worker publishes
-messages that failed after all retry attempts or encountered a permanent error.
-The offset is always committed after DLQ routing to prevent infinite loops.
-
-### RetryPolicy
-
-The Worker component that wraps handler execution with exponential backoff (1s,
-2s, 4s, 8s, 16s, max 5 attempts). Retries on transient exceptions
-(`HttpRequestException`, `SocketException`, `TimeoutException`, `IOException`).
-Routes to DLQ immediately on permanent exceptions.
+messages that failed processing. The offset is always committed after DLQ
+routing to prevent infinite loops.

@@ -21,7 +21,7 @@ Users of the system are backend engineers and data consumers — not end users.
 | --- | --- | --- |
 | `docs/product/overview.md` | System purpose, data flow, out of scope | Spec overview + data flow diagram |
 | `docs/product/orders.md` | Order entity contract, status enum, CRUD rules | Spec steps 4–6 |
-| `docs/product/pipeline.md` | CDC event contract, worker behavior, retry, DLQ | Spec steps 7, 9 |
+| `docs/product/pipeline.md` | CDC event contract, worker behavior, DLQ | Spec steps 7, 9 |
 
 ## Candidate Epics
 
@@ -30,7 +30,7 @@ Users of the system are backend engineers and data consumers — not end users.
 | E01 | Infrastructure & Data Layer — solution scaffold, Docker Compose, EF Core | sliced |
 | E02 | API Layer — OrdersController, OrderService, DI wiring | sliced |
 | E03 | CDC Pipeline — Debezium connector, Kafka topic verification | sliced |
-| E04 | Worker Layer — consumer, handlers, RetryPolicy, DLQ | sliced |
+| E04 | Worker Layer — consumer, handlers, DLQ | sliced |
 
 ## Architecture Questions
 
@@ -45,7 +45,7 @@ Users of the system are backend engineers and data consumers — not end users.
 
 | Layer | Expected proof |
 | --- | --- |
-| Unit | EF mapping rules, OrderService logic, handler routing per op, RetryPolicy backoff |
+| Unit | EF mapping rules, OrderService logic, handler routing per op |
 | Integration | Migrations run clean against MySQL, CDC events published to Kafka |
 | E2E | POST order → GET order; CDC event flows through to Elasticsearch and ClickHouse |
 | Platform | POSIX shell for Docker Compose commands; `dotnet test` on local dev machine |
@@ -69,7 +69,7 @@ Users of the system are backend engineers and data consumers — not end users.
 - US-007: Worker models — CdcEvent, OrderSnapshot, WorkerOptions
 - US-008: Infrastructure clients — ElasticsearchClient, ClickHouseClient
 - US-009: Event handlers — OrderSearchHandler, OrderAnalyticsHandler
-- US-010: Kafka consumer — KafkaCdcConsumerBase, OrderCdcConsumer, RetryPolicy, DLQ
+- US-010: Kafka consumer — KafkaCdcConsumerBase, OrderCdcConsumer, DLQ
 
 ## Harness Delta
 

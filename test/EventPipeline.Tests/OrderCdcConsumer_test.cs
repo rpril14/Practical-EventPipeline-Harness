@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
-using EventPipeline.Worker;
 using EventPipeline.Worker.Consumers;
 using EventPipeline.Worker.Handlers;
 using EventPipeline.Worker.Models;
@@ -34,7 +33,6 @@ public class OrderCdcConsumer_test
         return new OrderCdcConsumer(
             consumer ?? Mock.Of<IConsumer<string, string>>(),
             producer ?? Mock.Of<IProducer<string, string>>(),
-            new RetryPolicy(_ => System.TimeSpan.Zero),
             opts,
             handlers ?? new[] { Mock.Of<IOrderEventHandler>() },
             NullLogger<OrderCdcConsumer>.Instance);

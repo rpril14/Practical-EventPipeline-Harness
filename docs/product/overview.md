@@ -33,7 +33,7 @@ REST API  ───────────────────────�
                                                     Elasticsearch               ClickHouse
                                                    (current state)            (event append log)
 
-On error → ecommerce.orders_db.Orders.dlq (after 5 retry attempts)
+On error → ecommerce.orders_db.Orders.dlq
 ```
 
 ## Out of Scope (v1)

@@ -1,4 +1,4 @@
-# US-010 Kafka Consumer — KafkaCdcConsumerBase, OrderCdcConsumer, RetryPolicy, DLQ
+# US-010 Kafka Consumer — KafkaCdcConsumerBase, OrderCdcConsumer, DLQ
 
 ## Status
 
@@ -10,9 +10,8 @@ high-risk
 
 ## Product Contract
 
-The worker consumes CDC events from Kafka, applies retry logic, fans out to both
-handlers in sequence, and routes poison messages to the DLQ. Offset is always
-committed regardless of outcome.
+The worker consumes CDC events from Kafka, fans out to both handlers in sequence,
+and routes failed messages to the DLQ. Offset is always committed regardless of outcome.
 
 ## Relevant Product Docs
 
@@ -20,12 +19,10 @@ committed regardless of outcome.
 
 ## Acceptance Criteria
 
-- `KafkaCdcConsumerBase<T>` is an abstract `IHostedService` that handles the polling loop, retry, DLQ routing, and offset commit.
+- `KafkaCdcConsumerBase<T>` is an abstract `IHostedService` that handles the polling loop, DLQ routing, and offset commit.
 - `OrderCdcConsumer` extends the base and calls all registered `IOrderEventHandler` instances in sequence.
-- `RetryPolicy`: max 5 attempts, exponential backoff (`2^(attempt-1)` seconds), retries on transient exceptions, immediate DLQ on permanent exceptions.
 - On success: consumer commits offset.
-- On retry exhaustion or permanent exception: message published to DLQ topic, then offset committed.
-- `RetryPolicy_test`: 6 tests pass (success, transient retry count, permanent immediate throw, partial retry, backoff pattern, all transient types).
+- On any handler exception: message published to DLQ topic, then offset committed.
 - `OrderCdcConsumer_test`: 4 tests pass (both handlers called, DLQ on throw, commit on throw, commit on success).
 
 ## Design Notes
@@ -41,7 +38,7 @@ committed regardless of outcome.
 
 | Layer | Expected proof |
 | --- | --- |
-| Unit | `RetryPolicy_test` (6 tests) + `OrderCdcConsumer_test` (4 tests) |
+| Unit | `OrderCdcConsumer_test` (4 tests) |
 | Integration | Worker starts and processes a Kafka message end-to-end |
 | E2E | POST /orders → CDC event → Elasticsearch document exists + ClickHouse row exists |
 | Platform | none |
@@ -53,8 +50,8 @@ none
 
 ## Evidence
 
-- `RetryPolicy_test` → 6 passed (success, transient×5, permanent×1, partial retry, backoff, all types)
 - `OrderCdcConsumer_test` → 4 passed (both handlers called, DLQ on throw, commit on throw, commit on success)
-- Full suite → 31 passed, 0 failed
+- Full suite → 25 passed, 0 failed
 - E2E: `POST /orders` (id=4) → CDC event in Kafka → Worker processed → ES count=3, ClickHouse row `Id=4 Op=c TotalAmount=99`
 - Fixes applied: Debezium schema wrapper extraction, microsecond timestamp, ClickHouse password
+- Change: RetryPolicy removed — DLQ-only error handling per product decision

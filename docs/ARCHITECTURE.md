@@ -72,7 +72,7 @@ logic here. Registers DI in `Program.cs`.
 Kafka consumer pipeline. Receives CDC events from Debezium, extracts the
 `payload` from the Debezium envelope, deserializes into `CdcEvent<OrderSnapshot>`,
 and fans out to `OrderSearchHandler` and `OrderAnalyticsHandler` in sequence.
-Retry and DLQ are handled by `RetryPolicy` and `KafkaCdcConsumerBase`.
+Failed messages are routed to DLQ by `KafkaCdcConsumerBase`.
 
 ## Boundary Rules
 

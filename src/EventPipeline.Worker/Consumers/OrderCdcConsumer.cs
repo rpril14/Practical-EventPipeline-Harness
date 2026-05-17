@@ -12,11 +12,10 @@ namespace EventPipeline.Worker.Consumers;
 public class OrderCdcConsumer(
     IConsumer<string, string> consumer,
     IProducer<string, string> dlqProducer,
-    RetryPolicy retryPolicy,
     IOptions<KafkaOptions> options,
     IEnumerable<IOrderEventHandler> handlers,
     ILogger<OrderCdcConsumer> logger)
-    : KafkaCdcConsumerBase<OrderSnapshot>(consumer, dlqProducer, retryPolicy, options, logger)
+    : KafkaCdcConsumerBase<OrderSnapshot>(consumer, dlqProducer, options, logger)
 {
     protected override async Task HandleAsync(CdcEvent<OrderSnapshot> evt)
     {

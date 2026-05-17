@@ -1,5 +1,4 @@
 using Confluent.Kafka;
-using EventPipeline.Worker;
 using EventPipeline.Worker.Clients;
 using EventPipeline.Worker.Consumers;
 using EventPipeline.Worker.Handlers;
@@ -16,8 +15,6 @@ builder.Services.AddSingleton<IElasticsearchClient, ElasticsearchClient>();
 builder.Services.AddSingleton<IClickHouseClient, ClickHouseClient>();
 builder.Services.AddSingleton<IOrderEventHandler, OrderSearchHandler>();
 builder.Services.AddSingleton<IOrderEventHandler, OrderAnalyticsHandler>();
-builder.Services.AddSingleton<RetryPolicy>();
-
 builder.Services.AddSingleton<IConsumer<string, string>>(sp =>
 {
     var opts = sp.GetRequiredService<IOptions<KafkaOptions>>().Value;

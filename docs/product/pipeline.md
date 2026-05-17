@@ -63,15 +63,8 @@ CREATE TABLE IF NOT EXISTS order_events (
 
 Table is created on worker startup if it does not exist. Never updated or deleted.
 
-## Retry Policy
-
-- Max attempts: 5
-- Backoff: `2^(attempt-1)` seconds → 1s, 2s, 4s, 8s, 16s
-- Retry on: `HttpRequestException`, `SocketException`, `TimeoutException`, `IOException`
-- Immediate DLQ on: all other exceptions (e.g. `JsonException`, `ArgumentException`)
-
 ## DLQ Behavior
 
-On permanent failure or retry exhaustion:
+On any handler exception:
 1. Publish raw message value to DLQ topic.
-2. Commit offset regardless — prevents infinite retry loop on poison messages.
+2. Commit offset regardless — prevents infinite loop on poison messages.
