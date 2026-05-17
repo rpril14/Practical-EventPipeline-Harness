@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -52,3 +52,8 @@ committed regardless of outcome.
 none
 
 ## Evidence
+
+- `RetryPolicy_test` → 6 passed (success, transient×5, permanent×1, partial retry, backoff, all types)
+- `OrderCdcConsumer_test` → 4 passed (both handlers called, DLQ on throw, commit on throw, commit on success)
+- Full suite → 31 passed, 0 failed
+- Integration/E2E pending: requires `docker compose up -d`
