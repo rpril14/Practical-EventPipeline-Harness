@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -50,5 +50,11 @@ none
 
 ## Evidence
 
-- `CdcEvent_test` → 3 passed (unit proof for envelope deserialization)
-- Integration proof pending: requires `docker compose up -d`
+- `CdcEvent_test` → 3 passed (envelope deserialization, PascalCase field names)
+- Connector `orders-connector` registered via Debezium REST API
+- `GET /connectors/orders-connector/status` → `connector.state=RUNNING, task.state=RUNNING`
+- Created order via `POST /orders` → CDC event appears in topic `ecommerce.orders_db.Orders`
+  - `op=c id=1 status=1 total=60.0`
+  - `op=u id=1 status=2 total=60.0` (after status update)
+- Kafka config: `confluentinc/cp-kafka:7.9.0`, KRaft mode, `decimal.handling.mode=double`
+- Note: Worker E2E requires `127.0.0.1 kafka` in hosts file (one-time admin setup)
