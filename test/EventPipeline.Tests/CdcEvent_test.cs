@@ -11,11 +11,11 @@ public class CdcEvent_test
     [Fact]
     public void Deserialize_CreateOp_MapsAfterAndOp()
     {
-        // Arrange
+        // Arrange — PascalCase field names match actual Debezium MySQL output
         var json = """
             {
               "before": null,
-              "after": {"id":1,"customer_id":2,"status":1,"total_amount":50.00,"created_at":0,"updated_at":0},
+              "after": {"Id":1,"CustomerId":2,"Status":1,"TotalAmount":50.00,"CreatedAt":0,"UpdatedAt":0},
               "op": "c",
               "ts_ms": 1700000000000
             }
@@ -40,7 +40,7 @@ public class CdcEvent_test
         // Arrange
         var json = """
             {
-              "before": {"id":5,"customer_id":3,"status":2,"total_amount":100.00,"created_at":0,"updated_at":0},
+              "before": {"Id":5,"CustomerId":3,"Status":2,"TotalAmount":100.00,"CreatedAt":0,"UpdatedAt":0},
               "after": null,
               "op": "d",
               "ts_ms": 1700000001000
@@ -63,8 +63,8 @@ public class CdcEvent_test
         // Arrange
         var json = """
             {
-              "before": {"id":1,"customer_id":1,"status":1,"total_amount":10.00,"created_at":0,"updated_at":0},
-              "after":  {"id":1,"customer_id":1,"status":2,"total_amount":10.00,"created_at":0,"updated_at":0},
+              "before": {"Id":1,"CustomerId":1,"Status":1,"TotalAmount":10.00,"CreatedAt":0,"UpdatedAt":0},
+              "after":  {"Id":1,"CustomerId":1,"Status":2,"TotalAmount":10.00,"CreatedAt":0,"UpdatedAt":0},
               "op": "u",
               "ts_ms": 1700000002000
             }
