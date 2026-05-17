@@ -1,0 +1,11 @@
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\bin\Debug\net10.0\EventPipeline.Data.deps.json
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\bin\Debug\net10.0\EventPipeline.Data.dll
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\bin\Debug\net10.0\EventPipeline.Data.pdb
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.AssemblyInfoInputs.cache
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.AssemblyInfo.cs
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.csproj.CoreCompileInputs.cache
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.dll
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\refint\EventPipeline.Data.dll
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\EventPipeline.Data.pdb
+C:\Users\codeb\source\EventPipeline-harness\src\EventPipeline.Data\obj\Debug\net10.0\ref\EventPipeline.Data.dll

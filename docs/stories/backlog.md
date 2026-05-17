@@ -17,7 +17,6 @@ none
 
 | Story | Epic | Lane | Description |
 | --- | --- | --- | --- |
-| [US-001](epics/E01/US-001-init-solution.md) | E01 | normal | Initialize .NET 10 solution and project structure |
 | [US-002](epics/E01/US-002-docker-compose.md) | E01 | normal | Docker Compose — 7 infrastructure services |
 | [US-003](epics/E01/US-003-data-layer.md) | E01 | normal | Data layer — OrderEntity, AppDbContext, EF migration |
 | [US-004](epics/E02/US-004-services-layer.md) | E02 | normal | Services layer — OrderService |
@@ -30,7 +29,9 @@ none
 
 ## Completed
 
-none
+| Story | Epic | Lane | Description |
+| --- | --- | --- | --- |
+| [US-001](epics/E01/US-001-init-solution.md) | E01 | normal | Initialize .NET 10 solution and project structure |
 
 ## Deferred
 

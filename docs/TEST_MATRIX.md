@@ -16,7 +16,7 @@ This file maps product behavior to proof.
 
 | Story | Contract | Unit | Integration | E2E | Platform | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| US-001 Init solution | Solution scaffold, project references, SDK pin | no | `dotnet build` succeeds | no | no | planned | none |
+| US-001 Init solution | Solution scaffold, project references, SDK pin | no | `dotnet build` succeeds | no | no | implemented | `dotnet build` → 0 errors |
 | US-002 Docker Compose | 7 services running, MySQL binlog=ROW | no | `docker compose ps` all running | no | Docker Compose local | planned | none |
 | US-003 Data layer | EF mapping, UTC datetime, decimal precision | `AppDbContext_test` (3) | Migration runs against MySQL | no | no | planned | none |
 | US-004 Services | Create computes totalAmount; update/get return correct data | `OrderService_test` (7) | no | no | no | planned | none |

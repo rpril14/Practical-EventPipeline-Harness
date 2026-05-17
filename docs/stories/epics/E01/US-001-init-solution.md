@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -50,3 +50,7 @@ pinned SDK version.
 none
 
 ## Evidence
+
+- `dotnet build` → `Build succeeded. 0 Warning(s) 0 Error(s)`
+- Solution: `ecommerce-pipeline.sln` with 5 projects
+- References: Api→Data+Services, Services→Data, Worker→Data, Tests→Data+Services+Worker
