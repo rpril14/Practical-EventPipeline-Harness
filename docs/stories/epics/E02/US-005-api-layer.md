@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -50,3 +50,7 @@ IOrderService and returns the correct HTTP status code.
 none
 
 ## Evidence
+
+- `dotnet build src/EventPipeline.Api` → succeeded
+- Full test suite → 11 passed, 0 failed
+- E2E smoke test pending: requires MySQL running
