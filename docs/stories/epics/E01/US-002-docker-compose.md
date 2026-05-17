@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -53,3 +53,6 @@ A developer can start all seven infrastructure services with a single
 none
 
 ## Evidence
+
+- `scripts/docker-compose.yml` created with 7 services on `pipeline` network
+- Integration proof pending: run `docker compose up -d` and verify all services running
