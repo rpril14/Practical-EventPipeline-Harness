@@ -33,8 +33,8 @@ public class ClickHouseClient(IOptions<ClickHouseOptions> options) : IClickHouse
         cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "CustomerId", Value = (ulong)snapshot.CustomerId });
         cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "Status", Value = snapshot.Status });
         cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "TotalAmount", Value = snapshot.TotalAmount });
-        cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "CreatedAt", Value = DateTime.UnixEpoch.AddMilliseconds(snapshot.CreatedAt) });
-        cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "UpdatedAt", Value = DateTime.UnixEpoch.AddMilliseconds(snapshot.UpdatedAt) });
+        cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "CreatedAt", Value = DateTime.UnixEpoch.AddMicroseconds(snapshot.CreatedAt) });
+        cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "UpdatedAt", Value = DateTime.UnixEpoch.AddMicroseconds(snapshot.UpdatedAt) });
         cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "Op", Value = op });
         cmd.Parameters.Add(new ClickHouseDbParameter { ParameterName = "TsMs", Value = tsMs });
         await cmd.ExecuteNonQueryAsync();

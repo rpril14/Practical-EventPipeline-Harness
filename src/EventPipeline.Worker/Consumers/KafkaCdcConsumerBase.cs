@@ -23,11 +23,21 @@ public abstract class KafkaCdcConsumerBase<T>(
 
     protected abstract Task HandleAsync(CdcEvent<T> evt);
 
+    private CdcEvent<T> DeserializeEvent(string json)
+    {
+        using var doc = JsonDocument.Parse(json);
+        // Debezium emits {"schema":{...},"payload":{...}} by default.
+        // If schemas are disabled the payload is the root object.
+        var root = doc.RootElement;
+        var source = root.TryGetProperty("payload", out var payload) ? payload : root;
+        return source.Deserialize<CdcEvent<T>>(JsonOptions)!;
+    }
+
     public async Task ProcessMessageAsync(ConsumeResult<string, string> result)
     {
         try
         {
-            var evt = JsonSerializer.Deserialize<CdcEvent<T>>(result.Message.Value, JsonOptions)!;
+            var evt = DeserializeEvent(result.Message.Value);
             await retryPolicy.ExecuteAsync(() => HandleAsync(evt));
             consumer.Commit(result);
         }
