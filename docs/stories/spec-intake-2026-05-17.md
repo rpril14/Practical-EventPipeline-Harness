@@ -19,7 +19,7 @@ Users of the system are backend engineers and data consumers — not end users.
 
 | File | Purpose | Source sections |
 | --- | --- | --- |
-| `docs/product/overview.md` | System purpose, data flow, tech stack | Spec overview + data flow diagram |
+| `docs/product/overview.md` | System purpose, data flow, out of scope | Spec overview + data flow diagram |
 | `docs/product/orders.md` | Order entity contract, status enum, CRUD rules | Spec steps 4–6 |
 | `docs/product/pipeline.md` | CDC event contract, worker behavior, retry, DLQ | Spec steps 7, 9 |
 
@@ -27,10 +27,10 @@ Users of the system are backend engineers and data consumers — not end users.
 
 | Epic | Description | Status |
 | --- | --- | --- |
-| E01 | Infrastructure & Data Layer — solution scaffold, Docker Compose, EF Core | unsliced |
-| E02 | API Layer — OrdersController, OrderService, DI wiring | unsliced |
-| E03 | CDC Pipeline — Debezium connector, Kafka topic verification | unsliced |
-| E04 | Worker Layer — consumer, handlers, RetryPolicy, DLQ | unsliced |
+| E01 | Infrastructure & Data Layer — solution scaffold, Docker Compose, EF Core | sliced |
+| E02 | API Layer — OrdersController, OrderService, DI wiring | sliced |
+| E03 | CDC Pipeline — Debezium connector, Kafka topic verification | sliced |
+| E04 | Worker Layer — consumer, handlers, RetryPolicy, DLQ | sliced |
 
 ## Architecture Questions
 

@@ -15,8 +15,13 @@ none
 
 ## Planned
 
+none
+
+## Completed
+
 | Story | Epic | Lane | Description |
 | --- | --- | --- | --- |
+| [US-001](epics/E01/US-001-init-solution.md) | E01 | normal | Initialize .NET 10 solution and project structure |
 | [US-002](epics/E01/US-002-docker-compose.md) | E01 | normal | Docker Compose — 7 infrastructure services |
 | [US-003](epics/E01/US-003-data-layer.md) | E01 | normal | Data layer — OrderEntity, AppDbContext, EF migration |
 | [US-004](epics/E02/US-004-services-layer.md) | E02 | normal | Services layer — OrderService |
@@ -26,12 +31,6 @@ none
 | [US-008](epics/E04/US-008-infra-clients.md) | E04 | high-risk | Infrastructure clients — Elasticsearch, ClickHouse |
 | [US-009](epics/E04/US-009-handlers.md) | E04 | high-risk | Event handlers — search and analytics |
 | [US-010](epics/E04/US-010-consumer.md) | E04 | high-risk | Kafka consumer — base, OrderCdcConsumer, RetryPolicy, DLQ |
-
-## Completed
-
-| Story | Epic | Lane | Description |
-| --- | --- | --- | --- |
-| [US-001](epics/E01/US-001-init-solution.md) | E01 | normal | Initialize .NET 10 solution and project structure |
 
 ## Deferred
 

@@ -7,10 +7,14 @@ consumes those events and fans out to two downstream stores.
 
 ## CDC Event Shape (Debezium Envelope)
 
+Debezium wraps each event as `{"schema":{...},"payload":{...}}`. The worker
+extracts `payload` before deserializing. Field names are PascalCase, matching
+EF Core column names. Timestamps are microseconds since Unix epoch.
+
 ```json
 {
-  "before": { "id": 1, "customer_id": 2, "status": 1, "total_amount": 50.00, "created_at": 0, "updated_at": 0 },
-  "after":  { "id": 1, "customer_id": 2, "status": 2, "total_amount": 50.00, "created_at": 0, "updated_at": 0 },
+  "before": { "Id": 1, "CustomerId": 2, "Status": 1, "TotalAmount": 50.0, "CreatedAt": 0, "UpdatedAt": 0 },
+  "after":  { "Id": 1, "CustomerId": 2, "Status": 2, "TotalAmount": 50.0, "CreatedAt": 0, "UpdatedAt": 0 },
   "op": "u",
   "ts_ms": 1700000000000
 }
@@ -22,17 +26,19 @@ consumes those events and fans out to two downstream stores.
 - `d` — row deleted
 - `r` — snapshot read (initial sync)
 
-`created_at` and `updated_at` are delivered as milliseconds since Unix epoch.
+`CreatedAt` and `UpdatedAt` are delivered as **microseconds** since Unix epoch
+(`io.debezium.time.MicroTimestamp`). `TotalAmount` arrives as a JSON number
+(`decimal.handling.mode=double` in connector config).
 
-Kafka topic: `ecommerce.orders_db.orders`
-DLQ topic: `ecommerce.orders_db.orders.dlq`
+Kafka topic: `ecommerce.orders_db.Orders`
+DLQ topic: `ecommerce.orders_db.Orders.dlq`
 
 ## Elasticsearch Behavior
 
 | op | Action |
 | --- | --- |
 | c, u, r | Upsert document using `after` |
-| d | Delete document using `before.id` |
+| d | Delete document using `before.Id` |
 
 Maintains current order state. Index name: `orders`.
 

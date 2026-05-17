@@ -1,3 +1,5 @@
+# Agent Operating Guide
+
 ## Source Of Truth
 
 Read in this order:
@@ -18,6 +20,28 @@ first buildout. Derive product docs, story packets, architecture decisions, and
 validation expectations from it. Product docs, stories, tests, and decisions
 then become the living contract that agents should update as the system evolves.
 
+## Session Rules
+
+These rules apply to every session, without exception:
+
+1. **Never commit or push without explicit human approval.** Make all changes,
+   show a summary of what changed, and wait for the human to say it is ready
+   before running `git commit` or `git push`.
+
+2. **Update relevant docs immediately when code or business logic changes.**
+   This applies the moment a change is made — not deferred to the end of the
+   task. This includes self-corrections: if the agent fixes a bug, adjusts
+   behavior, or revises something during implementation, the corresponding docs
+   must be updated at that point, not accumulated for later.
+
+   Which file to update depends on what changed:
+   - `docs/product/` — behavior contract, API shape, business rules.
+   - `docs/ARCHITECTURE.md` — solution structure, stack, layer or boundary rules.
+   - `docs/stories/` — story status and evidence.
+   - `docs/TEST_MATRIX.md` — proof status and evidence.
+   - `docs/decisions/` — an architecture or product choice was made or changed.
+   - `docs/HARNESS_BACKLOG.md` — friction was discovered.
+
 ## Task Loop
 
 For every task:
@@ -36,6 +60,7 @@ For every task:
    - Did the next agent need a clearer instruction?
 7. Update routine harness files directly, or add a proposal to
    `docs/HARNESS_BACKLOG.md` when the change is structural.
+8. Show a summary of all changes and wait for human approval before committing.
 
 ## Harness Change Policy
 
@@ -63,4 +88,6 @@ A task is done only when:
 - Relevant docs, stories, and test matrix entries remain current.
 - Validation commands were run when they exist.
 - Missing harness capabilities were added to `docs/HARNESS_BACKLOG.md`.
+- The human has reviewed and approved the changes.
+- `git commit` and `git push` have been run only after that approval.
 - The final response says what changed and what was not attempted.

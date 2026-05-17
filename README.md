@@ -57,7 +57,7 @@ are not documentation added after the fact — they drove the work.
 ## Project Structure
 
 ```
-EventPipeline-harness/
+EventPipeline-Harness/
 ├── AGENTS.md                        ← agent entrypoint: read order, task loop, done definition
 ├── src/
 │   ├── EventPipeline.Api            ← ASP.NET Core: POST/PUT/GET /orders
