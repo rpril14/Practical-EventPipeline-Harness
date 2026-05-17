@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -55,3 +55,6 @@ the schema.
 none
 
 ## Evidence
+
+- `AppDbContext_test` → 3 passed (round-trip, UTC kind, OrderItem fields)
+- Migration pending: requires MySQL running (`docker compose up -d`)
