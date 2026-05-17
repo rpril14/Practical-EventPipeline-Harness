@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -50,3 +50,6 @@ ClickHouse.
 none
 
 ## Evidence
+
+- `OrderSearchHandler_test` → 4 passed (c, u, r → upsert; d → delete)
+- `OrderAnalyticsHandler_test` → 3 passed (c/u → After; d → Before)

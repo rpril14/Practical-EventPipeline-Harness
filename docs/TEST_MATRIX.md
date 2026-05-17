@@ -24,7 +24,7 @@ This file maps product behavior to proof.
 | US-006 CDC connector | Connector RUNNING; orders table events in Kafka | `CdcEvent_test` (3) | Connector status=RUNNING; message in topic | no | Debezium REST :8083 | in_progress | unit proof done; integration pending infra |
 | US-007 Worker models | CdcEvent and OrderSnapshot deserialize correctly | `CdcEvent_test` (3, shared with US-006) | no | no | no | implemented | `CdcEvent_test` → 3 passed |
 | US-008 Infra clients | IElasticsearchClient and IClickHouseClient are mockable | via mock in US-009 tests | manual ClickHouse insert verify | no | no | planned | none |
-| US-009 Handlers | Search: c/u/r→upsert, d→delete; Analytics: always insert | `OrderSearchHandler_test` (4) + `OrderAnalyticsHandler_test` (3) | no | no | no | planned | none |
+| US-009 Handlers | Search: c/u/r→upsert, d→delete; Analytics: always insert | `OrderSearchHandler_test` (4) + `OrderAnalyticsHandler_test` (3) | no | no | no | implemented | 4 + 3 = 7 passed |
 | US-010 Consumer | Retry backoff; DLQ on permanent error; always commit | `RetryPolicy_test` (6) + `OrderCdcConsumer_test` (4) | Worker processes Kafka message | POST→CDC→ES+CH | no | planned | none |
 
 ## Evidence Rules
