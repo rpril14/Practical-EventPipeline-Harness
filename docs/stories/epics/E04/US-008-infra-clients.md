@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+implemented
 
 ## Lane
 
@@ -50,3 +50,6 @@ ClickHouse.
 none
 
 ## Evidence
+
+- `dotnet build src/EventPipeline.Worker` → succeeded
+- Unit proof via mocks: pending US-009 tests
