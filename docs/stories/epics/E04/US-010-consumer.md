@@ -56,4 +56,5 @@ none
 - `RetryPolicy_test` → 6 passed (success, transient×5, permanent×1, partial retry, backoff, all types)
 - `OrderCdcConsumer_test` → 4 passed (both handlers called, DLQ on throw, commit on throw, commit on success)
 - Full suite → 31 passed, 0 failed
-- Integration/E2E pending: requires `docker compose up -d`
+- E2E: `POST /orders` (id=4) → CDC event in Kafka → Worker processed → ES count=3, ClickHouse row `Id=4 Op=c TotalAmount=99`
+- Fixes applied: Debezium schema wrapper extraction, microsecond timestamp, ClickHouse password
