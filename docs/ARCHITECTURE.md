@@ -44,7 +44,7 @@ Inner layers (Data, Services) must not reference outer layers (Api, Worker).
 | Database | MySQL | 8.0 |
 | CDC | Debezium | 3.0.0.Final |
 | Messaging | Kafka — Confluent.Kafka | 2.6 |
-| Search | Elasticsearch — NEST | 8 / 7.17 |
+| Search | Elasticsearch — HttpClient | 8 |
 | Analytics | ClickHouse — ClickHouse.Client | 7.4 |
 | Tests | xUnit + Moq | 2.9 / 4.20 |
 | Dev infra | Docker Compose | — |
@@ -72,7 +72,8 @@ logic here. Registers DI in `Program.cs`.
 Kafka consumer pipeline. Receives CDC events from Debezium, extracts the
 `payload` from the Debezium envelope, deserializes into `CdcEvent<OrderSnapshot>`,
 and fans out to `OrderSearchHandler` and `OrderAnalyticsHandler` in sequence.
-Failed messages are routed to DLQ by `KafkaCdcConsumerBase`.
+`KafkaCdcConsumerBase` creates a DI scope per message so handlers are resolved
+fresh each time. Failed messages are routed to DLQ.
 
 ## Boundary Rules
 

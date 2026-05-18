@@ -37,7 +37,7 @@ Users of the system are backend engineers and data consumers — not end users.
 - Runtime stack: .NET 10, ASP.NET Core 10, EF Core 9 + Pomelo MySQL
 - Product surfaces: REST API (internal), background worker
 - Storage: MySQL 8.0 (transactional), Elasticsearch 8 (search), ClickHouse (analytics)
-- External providers: Kafka (Confluent.Kafka 2.6), Debezium 3.0, NEST 7.17, ClickHouse.Client 7.4
+- External providers: Kafka (Confluent.Kafka 2.6), Debezium 3.0, ClickHouse.Client 7.4
 - Deployment target: Docker Compose for dev; production target not defined in spec
 - Security model: not defined in spec — no auth, no authorization layer in v1
 

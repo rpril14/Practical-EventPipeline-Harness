@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Confluent.Kafka;
 using EventPipeline.Worker.Handlers;
 using EventPipeline.Worker.Models;
 using EventPipeline.Worker.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -13,13 +15,13 @@ public class OrderCdcConsumer(
     IConsumer<string, string> consumer,
     IProducer<string, string> dlqProducer,
     IOptions<KafkaOptions> options,
-    IEnumerable<IOrderEventHandler> handlers,
+    IServiceProvider services,
     ILogger<OrderCdcConsumer> logger)
-    : KafkaCdcConsumerBase<OrderSnapshot>(consumer, dlqProducer, options, logger)
+    : KafkaCdcConsumerBase<OrderSnapshot>(consumer, dlqProducer, options, services, logger)
 {
-    protected override async Task HandleAsync(CdcEvent<OrderSnapshot> evt)
+    protected override async Task HandleAsync(CdcEvent<OrderSnapshot> evt, IServiceProvider services)
     {
-        foreach (var handler in handlers)
+        foreach (var handler in services.GetRequiredService<IEnumerable<IOrderEventHandler>>())
             await handler.HandleAsync(evt);
     }
 }

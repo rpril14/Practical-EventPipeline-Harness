@@ -19,7 +19,7 @@ and routes failed messages to the DLQ. Offset is always committed regardless of 
 
 ## Acceptance Criteria
 
-- `KafkaCdcConsumerBase<T>` is an abstract `IHostedService` that handles the polling loop, DLQ routing, and offset commit.
+- `KafkaCdcConsumerBase<T>` is an abstract `IHostedService` that handles the polling loop, DLQ routing, and offset commit. It creates a DI scope per message and passes `IServiceProvider` to `HandleAsync` so each message gets fresh handler instances.
 - `OrderCdcConsumer` extends the base and calls all registered `IOrderEventHandler` instances in sequence.
 - On success: consumer commits offset.
 - On any handler exception: message published to DLQ topic, then offset committed.

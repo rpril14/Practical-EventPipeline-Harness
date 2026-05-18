@@ -7,6 +7,7 @@ using EventPipeline.Worker.Consumers;
 using EventPipeline.Worker.Handlers;
 using EventPipeline.Worker.Models;
 using EventPipeline.Worker.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -30,11 +31,17 @@ public class OrderCdcConsumer_test
             Topic = "test-topic",
             DlqTopic = "test-topic.dlq"
         });
+
+        var services = new ServiceCollection();
+        foreach (var h in handlers ?? new[] { Mock.Of<IOrderEventHandler>() })
+            services.AddScoped<IOrderEventHandler>(_ => h);
+        var sp = services.BuildServiceProvider();
+
         return new OrderCdcConsumer(
             consumer ?? Mock.Of<IConsumer<string, string>>(),
             producer ?? Mock.Of<IProducer<string, string>>(),
             opts,
-            handlers ?? new[] { Mock.Of<IOrderEventHandler>() },
+            sp,
             NullLogger<OrderCdcConsumer>.Instance);
     }
 

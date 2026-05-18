@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Confluent.Kafka;
 using EventPipeline.Worker.Models;
 using EventPipeline.Worker.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,18 +16,17 @@ public abstract class KafkaCdcConsumerBase<T>(
     IConsumer<string, string> consumer,
     IProducer<string, string> dlqProducer,
     IOptions<KafkaOptions> options,
+    IServiceProvider services,
     ILogger logger) : IHostedService
 {
     private readonly KafkaOptions _options = options.Value;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    protected abstract Task HandleAsync(CdcEvent<T> evt);
+    protected abstract Task HandleAsync(CdcEvent<T> evt, IServiceProvider services);
 
-    private CdcEvent<T> DeserializeEvent(string json)
+    private static CdcEvent<T> DeserializeEvent(string json)
     {
         using var doc = JsonDocument.Parse(json);
-        // Debezium emits {"schema":{...},"payload":{...}} by default.
-        // If schemas are disabled the payload is the root object.
         var root = doc.RootElement;
         var source = root.TryGetProperty("payload", out var payload) ? payload : root;
         return source.Deserialize<CdcEvent<T>>(JsonOptions)!;
@@ -37,7 +37,8 @@ public abstract class KafkaCdcConsumerBase<T>(
         try
         {
             var evt = DeserializeEvent(result.Message.Value);
-            await HandleAsync(evt);
+            using var scope = services.CreateScope();
+            await HandleAsync(evt, scope.ServiceProvider);
             consumer.Commit(result);
         }
         catch (Exception ex)
