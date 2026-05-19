@@ -6,7 +6,7 @@ namespace EventPipeline.Worker.Handlers;
 
 public class OrderSearchHandler(IElasticsearchClient es) : IOrderEventHandler
 {
-    public async Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent)
+    public async Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent, KafkaMessageContext context)
     {
         if (cdcEvent.Op == "d")
         {

@@ -5,5 +5,5 @@ namespace EventPipeline.Worker.Handlers;
 
 public interface IOrderEventHandler
 {
-    Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent);
+    Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent, KafkaMessageContext context);
 }

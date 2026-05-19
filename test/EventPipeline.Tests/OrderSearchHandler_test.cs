@@ -10,6 +10,7 @@ namespace EventPipeline.Tests;
 public class OrderSearchHandler_test
 {
     private static OrderSnapshot Snapshot(long id = 1) => new(id, 2, 1, 100m, 0, 0);
+    private static readonly KafkaMessageContext Context = new(0, 0);
 
     [Fact]
     public async Task HandleAsync_CreateOp_CallsUpsert()
@@ -20,7 +21,7 @@ public class OrderSearchHandler_test
         var evt = new CdcEvent<OrderSnapshot>(null, Snapshot(1), "c", 0);
 
         // Act
-        await handler.HandleAsync(evt);
+        await handler.HandleAsync(evt, Context);
 
         // Assert
         mockEs.Verify(e => e.UpsertAsync(1, Snapshot(1)), Times.Once);
@@ -36,7 +37,7 @@ public class OrderSearchHandler_test
         var evt = new CdcEvent<OrderSnapshot>(Snapshot(2), Snapshot(2), "u", 0);
 
         // Act
-        await handler.HandleAsync(evt);
+        await handler.HandleAsync(evt, Context);
 
         // Assert
         mockEs.Verify(e => e.UpsertAsync(2, Snapshot(2)), Times.Once);
@@ -51,7 +52,7 @@ public class OrderSearchHandler_test
         var evt = new CdcEvent<OrderSnapshot>(null, Snapshot(3), "r", 0);
 
         // Act
-        await handler.HandleAsync(evt);
+        await handler.HandleAsync(evt, Context);
 
         // Assert
         mockEs.Verify(e => e.UpsertAsync(3, Snapshot(3)), Times.Once);
@@ -66,7 +67,7 @@ public class OrderSearchHandler_test
         var evt = new CdcEvent<OrderSnapshot>(Snapshot(4), null, "d", 0);
 
         // Act
-        await handler.HandleAsync(evt);
+        await handler.HandleAsync(evt, Context);
 
         // Assert
         mockEs.Verify(e => e.DeleteAsync(4), Times.Once);

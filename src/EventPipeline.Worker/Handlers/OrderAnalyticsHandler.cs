@@ -6,9 +6,9 @@ namespace EventPipeline.Worker.Handlers;
 
 public class OrderAnalyticsHandler(IClickHouseClient clickHouse) : IOrderEventHandler
 {
-    public async Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent)
+    public async Task HandleAsync(CdcEvent<OrderSnapshot> cdcEvent, KafkaMessageContext context)
     {
         var snapshot = cdcEvent.After ?? cdcEvent.Before!;
-        await clickHouse.InsertAsync(snapshot, cdcEvent.Op, cdcEvent.TsMs);
+        await clickHouse.InsertAsync(snapshot, cdcEvent.Op, cdcEvent.TsMs, context.Partition, context.Offset);
     }
 }

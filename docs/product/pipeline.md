@@ -50,18 +50,28 @@ Table: `order_events`
 
 ```sql
 CREATE TABLE IF NOT EXISTS order_events (
-  Id           UInt64,
-  CustomerId   UInt64,
-  Status       Int32,
-  TotalAmount  Decimal64(2),
-  CreatedAt    DateTime,
-  UpdatedAt    DateTime,
-  Op           String,
-  TsMs         Int64
-) ENGINE = MergeTree() ORDER BY (Id, TsMs)
+  Id             UInt64,
+  CustomerId     UInt64,
+  Status         Int32,
+  TotalAmount    Decimal64(2),
+  CreatedAt      DateTime,
+  UpdatedAt      DateTime,
+  Op             String,
+  TsMs           Int64,
+  KafkaPartition Int32,
+  KafkaOffset    Int64
+) ENGINE = ReplacingMergeTree() ORDER BY (KafkaPartition, KafkaOffset)
 ```
 
 Table is created on worker startup if it does not exist. Never updated or deleted.
+
+`KafkaPartition` and `KafkaOffset` identify the source Kafka message. The
+`ReplacingMergeTree` engine uses these columns to deduplicate replayed messages at
+merge time. Analytics queries must use `SELECT ... FROM order_events FINAL` to
+guarantee deduplication before the background merge completes.
+
+**Upgrade note:** drop the existing `order_events` table before the first run after
+this schema change — `CREATE IF NOT EXISTS` will not alter an existing table.
 
 ## DLQ Behavior
 

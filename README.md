@@ -130,7 +130,7 @@ ClickHouse (`SELECT * FROM order_events`).
 
 ```bash
 dotnet test
-# Expected: 31 passed, 0 failed
+# Expected: 25 passed, 0 failed
 ```
 
 ## What the Harness Provides

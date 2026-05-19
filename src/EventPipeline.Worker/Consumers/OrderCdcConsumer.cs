@@ -19,9 +19,9 @@ public class OrderCdcConsumer(
     ILogger<OrderCdcConsumer> logger)
     : KafkaCdcConsumerBase<OrderSnapshot>(consumer, dlqProducer, options, services, logger)
 {
-    protected override async Task HandleAsync(CdcEvent<OrderSnapshot> evt, IServiceProvider services)
+    protected override async Task HandleAsync(CdcEvent<OrderSnapshot> evt, KafkaMessageContext context, IServiceProvider services)
     {
         foreach (var handler in services.GetRequiredService<IEnumerable<IOrderEventHandler>>())
-            await handler.HandleAsync(evt);
+            await handler.HandleAsync(evt, context);
     }
 }

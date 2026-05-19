@@ -22,7 +22,7 @@ public abstract class KafkaCdcConsumerBase<T>(
     private readonly KafkaOptions _options = options.Value;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    protected abstract Task HandleAsync(CdcEvent<T> evt, IServiceProvider services);
+    protected abstract Task HandleAsync(CdcEvent<T> evt, KafkaMessageContext context, IServiceProvider services);
 
     private static CdcEvent<T> DeserializeEvent(string json)
     {
@@ -34,11 +34,12 @@ public abstract class KafkaCdcConsumerBase<T>(
 
     public async Task ProcessMessageAsync(ConsumeResult<string, string> result)
     {
+        var context = new KafkaMessageContext(result.Partition.Value, result.Offset.Value);
         try
         {
             var evt = DeserializeEvent(result.Message.Value);
             using var scope = services.CreateScope();
-            await HandleAsync(evt, scope.ServiceProvider);
+            await HandleAsync(evt, context, scope.ServiceProvider);
             consumer.Commit(result);
         }
         catch (Exception ex)

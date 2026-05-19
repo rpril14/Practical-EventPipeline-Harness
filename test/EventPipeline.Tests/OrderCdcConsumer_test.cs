@@ -61,8 +61,8 @@ public class OrderCdcConsumer_test
         await consumer.ProcessMessageAsync(MakeResult(evt));
 
         // Assert
-        mockSearch.Verify(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>()), Times.Once);
-        mockAnalytics.Verify(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>()), Times.Once);
+        mockSearch.Verify(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>(), It.IsAny<KafkaMessageContext>()), Times.Once);
+        mockAnalytics.Verify(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>(), It.IsAny<KafkaMessageContext>()), Times.Once);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class OrderCdcConsumer_test
     {
         // Arrange
         var mockHandler = new Mock<IOrderEventHandler>();
-        mockHandler.Setup(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>()))
+        mockHandler.Setup(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>(), It.IsAny<KafkaMessageContext>()))
             .ThrowsAsync(new System.ArgumentException("poison"));
         var mockProducer = new Mock<IProducer<string, string>>();
         var consumer = CreateConsumer(producer: mockProducer.Object, handlers: new[] { mockHandler.Object });
@@ -91,7 +91,7 @@ public class OrderCdcConsumer_test
         // Arrange
         var mockConsumer = new Mock<IConsumer<string, string>>();
         var mockHandler = new Mock<IOrderEventHandler>();
-        mockHandler.Setup(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>()))
+        mockHandler.Setup(h => h.HandleAsync(It.IsAny<CdcEvent<OrderSnapshot>>(), It.IsAny<KafkaMessageContext>()))
             .ThrowsAsync(new System.ArgumentException("poison"));
         var consumer = CreateConsumer(consumer: mockConsumer.Object, handlers: new[] { mockHandler.Object });
         var result = MakeResult(new CdcEvent<OrderSnapshot>(null, new OrderSnapshot(1, 2, 1, 50m, 0, 0), "c", 0L));
