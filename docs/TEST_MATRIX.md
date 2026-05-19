@@ -23,9 +23,9 @@ This file maps product behavior to proof.
 | US-005 API | POST=201, PUT=200/404, GET=200/404 | no | no | `curl POST /orders` → `GET /orders/{id}` | no | implemented | build succeeded; E2E smoke pending MySQL |
 | US-006 CDC connector | Connector RUNNING; orders table events in Kafka | `CdcEvent_test` (3) | Connector RUNNING; op=c,op=u events in topic | no | Debezium REST :8083 | implemented | Connector RUNNING; CDC events verified in Kafka; Worker E2E pending hosts entry |
 | US-007 Worker models | CdcEvent and OrderSnapshot deserialize correctly | `CdcEvent_test` (3, shared with US-006) | no | no | no | implemented | `CdcEvent_test` → 3 passed |
-| US-008 Infra clients | IElasticsearchClient and IClickHouseClient are mockable | via mock in US-009 tests | manual ClickHouse insert verify | no | no | planned | none |
+| US-008 Infra clients | IElasticsearchClient and IClickHouseClient are mockable | via mock in US-009 tests | manual ClickHouse insert verify | no | no | implemented | interfaces verified via Moq in `OrderSearchHandler_test` (4) + `OrderAnalyticsHandler_test` (3); ClickHouse insert verified in US-010 E2E |
 | US-009 Handlers | Search: c/u/r→upsert, d→delete; Analytics: always insert | `OrderSearchHandler_test` (4) + `OrderAnalyticsHandler_test` (3) | no | no | no | implemented | 4 + 3 = 7 passed |
-| US-010 Consumer | DLQ on error; always commit | `OrderCdcConsumer_test` (4) | Worker processes Kafka message | POST→CDC→ES count=3, CH row verified | no | implemented | 4 passed; E2E verified end-to-end |
+| US-010 Consumer | DLQ on error; always commit | `OrderCdcConsumer_test` (4) | Worker processes Kafka message | POST→CDC→ES count=3, CH row verified (ReplacingMergeTree, dedup via KafkaPartition+KafkaOffset) | no | implemented | 4 passed; E2E verified end-to-end |
 
 ## Evidence Rules
 

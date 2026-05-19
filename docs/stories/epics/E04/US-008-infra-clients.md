@@ -52,4 +52,5 @@ none
 ## Evidence
 
 - `dotnet build src/EventPipeline.Worker` → succeeded
-- Unit proof via mocks: pending US-009 tests
+- Unit proof: interfaces mocked via Moq in `OrderSearchHandler_test` (4) + `OrderAnalyticsHandler_test` (3) — all passed
+- Integration proof: ClickHouse insert and Elasticsearch upsert/delete verified in US-010 E2E
