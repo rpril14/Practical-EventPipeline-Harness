@@ -29,9 +29,10 @@ Client → API → MySQL → Debezium → Kafka → Worker → Elasticsearch
 | Database | MySQL 8.0 |
 | CDC | Debezium 3.0 |
 | Messaging | Kafka (Confluent.Kafka 2.6) |
-| Search | Elasticsearch 8 (NEST 7.17) |
+| Search | Elasticsearch 8 (HttpClient) |
 | Analytics | ClickHouse (ClickHouse.Client 7.4) |
 | Tests | xUnit 2.9 + Moq 4.20 |
+| CI | GitHub Actions |
 | Dev infra | Docker Compose |
 
 ## How It Was Built — The Harness Flow
@@ -63,9 +64,9 @@ EventPipeline-Harness/
 │   ├── EventPipeline.Api            ← ASP.NET Core: POST/PUT/GET /orders
 │   ├── EventPipeline.Data           ← EF Core entities, DbContext, migrations
 │   ├── EventPipeline.Services       ← OrderService business logic
-│   └── EventPipeline.Worker         ← Kafka consumer, handlers, RetryPolicy, DLQ
+│   └── EventPipeline.Worker         ← Kafka consumer, scoped handlers, DLQ routing
 ├── test/
-│   └── EventPipeline.Tests          ← 31 tests: unit + integration coverage
+│   └── EventPipeline.Tests          ← 25 tests: unit + integration coverage
 ├── scripts/
 │   └── docker-compose.yml           ← MySQL, Kafka, Debezium, Elasticsearch, ClickHouse
 └── docs/
@@ -74,7 +75,7 @@ EventPipeline-Harness/
     │   ├── backlog.md               ← 10 stories across 4 epics
     │   ├── spec-intake-2026-05-17.md
     │   └── epics/E01…E04/           ← individual story packets
-    ├── decisions/                   ← 7 architecture decisions with context and tradeoffs
+    ├── decisions/                   ← 8 architecture decisions with context and tradeoffs
     ├── TEST_MATRIX.md               ← behavior-to-proof control panel
     └── templates/                   ← reusable story, decision, validation templates
 ```
@@ -124,7 +125,8 @@ curl -X POST http://localhost:5000/orders \
 
 After creating an order, the CDC event flows through Debezium → Kafka → Worker and
 the order appears in both Elasticsearch (`http://localhost:9200/orders/_search`) and
-ClickHouse (`SELECT * FROM order_events`).
+ClickHouse (`SELECT * FROM order_events`). ClickHouse uses a ReplacingMergeTree table
+so re-delivered events are deduplicated by `(order_id, kafka_offset)`.
 
 ## Running Tests
 
@@ -149,10 +151,11 @@ gathered after implementation. The story is not closed until proof exists.
 **`docs/TEST_MATRIX.md`** maps every behavior to its proof. A row is marked
 `implemented` only when tests or manual evidence have been recorded.
 
-**`docs/decisions/`** captures seven architecture decisions — why the status enum is
+**`docs/decisions/`** captures eight architecture decisions — why the status enum is
 closed, why navigation properties are absent, why ClickHouse is append-only, why the
-consumer always commits after DLQ routing. Future developers and agents inherit the
-reasoning, not just the outcome.
+consumer always commits after DLQ routing, and why ClickHouse deduplication uses
+ReplacingMergeTree. Future developers and agents inherit the reasoning, not just the
+outcome.
 
 ## What Harness Engineering Is
 
