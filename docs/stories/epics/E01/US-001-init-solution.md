@@ -20,7 +20,7 @@ pinned SDK version.
 
 ## Acceptance Criteria
 
-- Solution file `ecommerce-pipeline.sln` exists at repo root.
+- Solution file `EventPipeline.sln` exists at repo root.
 - `global.json` pins SDK to `10.0.100` with `latestPatch` roll-forward.
 - Four source projects and one test project exist under `src/` and `test/`.
 - Project references match: Api → Data + Services; Services → Data; Worker → Data; Tests → Data + Services + Worker.
@@ -52,5 +52,5 @@ none
 ## Evidence
 
 - `dotnet build` → `Build succeeded. 0 Warning(s) 0 Error(s)`
-- Solution: `ecommerce-pipeline.sln` with 5 projects
+- Solution: `EventPipeline.sln` with 5 projects
 - References: Api→Data+Services, Services→Data, Worker→Data, Tests→Data+Services+Worker
