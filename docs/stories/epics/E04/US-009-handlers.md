@@ -20,7 +20,7 @@ ClickHouse.
 
 ## Acceptance Criteria
 
-- `IOrderEventHandler` exposes `HandleAsync(CdcEvent<OrderSnapshot>)`.
+- `IOrderEventHandler` exposes `HandleAsync(CdcEvent<OrderSnapshot> cdcEvent, KafkaMessageContext context)`.
 - `OrderSearchHandler`: op=d → DeleteAsync; op=c/u/r → UpsertAsync with `After`.
 - `OrderAnalyticsHandler`: always calls InsertAsync using `After ?? Before`.
 - `OrderSearchHandler_test`: 4 tests pass (c, u, r → upsert; d → delete).

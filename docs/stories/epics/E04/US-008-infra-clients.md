@@ -22,7 +22,7 @@ insert for ClickHouse.
 
 - `IElasticsearchClient` exposes `UpsertAsync(long id, OrderSnapshot document)` and `DeleteAsync(long id)`.
 - `ElasticsearchClient` uses `HttpClient` to PUT/DELETE documents to the configured index.
-- `IClickHouseClient` exposes `InsertAsync(OrderSnapshot snapshot, string op, long tsMs)`.
+- `IClickHouseClient` exposes `InsertAsync(OrderSnapshot snapshot, string op, long tsMs, int kafkaPartition, long kafkaOffset)`.
 - `ClickHouseClient` creates the `order_events` table on first use if it does not exist, then inserts.
 - Both interfaces are mockable via Moq (used in handler tests US-009).
 
@@ -32,7 +32,7 @@ insert for ClickHouse.
 - Queries: none
 - API: Elasticsearch at :9200; ClickHouse at :8123
 - Tables: `order_events` (ClickHouse) — created by client if absent
-- Domain rules: timestamp fields in OrderSnapshot are milliseconds since epoch; client converts to DateTime
+- Domain rules: timestamp fields in OrderSnapshot are microseconds since Unix epoch; client converts to DateTime
 - UI surfaces: none
 
 ## Validation
